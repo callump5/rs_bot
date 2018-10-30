@@ -13,12 +13,13 @@ treeimages = [
 
 
 thresh = [
-    {'thresh-num': 0.725},
     {'thresh-num': 0.7},
-    {'thresh-num': 06.75},
+    {'thresh-num': 0.6},
 ]
 willimages = [
-    {'link': 'triggers/my-will-3.png'},
+    {'link': 'triggers/willows/willowleaves.png'},
+    {'link': 'triggers/willows/willowleaves2.png'},
+    {'link': 'triggers/willows/willowleaves3.png'},
 ]
 
 goblin = [
