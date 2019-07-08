@@ -6,7 +6,7 @@ import numpy as np
 import argparse
 import pyautogui as pag
 
-from items import *
+from items import yewimages, thresh
 
 pag.FAILSAFE = False
 
@@ -40,7 +40,7 @@ class ChopBot(object):
 
     def move_to_trigger(self, img, threshold):
         if self.image_match(img, threshold):
-            pag.moveTo(self.coor_x + randint(5,10), self.coor_y + randint(4, 7), self.random_move())
+            pag.moveTo(self.coor_x + randint(7,12), self.coor_y + randint(7, 12), self.random_move())
         return False
 
     def click_trigger(self, img, threshold):
@@ -56,13 +56,15 @@ class ChopBot(object):
                 if self.image_match(img, threshold):
                     while self.image_match(img, threshold):
                         time.sleep(1)
+                elif self.check_inv(0.9):
+                        break
                 else:
                     break
 
     def start(self):
-        print "Starting Bot"
+        print ("Starting Bot")
 
-        if self.image_match('triggers/bag.png', 0.6):
+        if self.image_match('triggers/assets/bag.png', 0.6):
             pag.moveTo(self.coor_x, self.coor_y, self.random_move())
             pag.click()
 
@@ -70,94 +72,131 @@ class ChopBot(object):
 
         pag.screenshot('triggers/screen.png')
         screen = cv2.imread('triggers/screen.png')
-        template = cv2.imread('triggers/logs.png')
+        template = cv2.imread('triggers/woodcutting/willows/logs.png')
 
         res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= threshold)
 
         if len(loc[0]) > 25:
-            print "Bag is full!!"
-            self.bank_logs()
+            print ("Bag is full!!")
+            self.bank_logs_camelot()
             time.sleep(1)
 
-    def bank_logs(self):
+    def bank_logs_camelot(self):
 
-        self.move_to_trigger('triggers/maps.png', .6)
-        self.click_trigger('triggers/maps.png', .6)
+        self.move_to_trigger('triggers/assets/maps.png', .6)
+        self.click_trigger('triggers/assets/maps.png', .6)
 
 
-        self.move_to_trigger('triggers/bank.png', .8)
-        self.click_trigger('triggers/bank.png', .8)
+        self.move_to_trigger('triggers/woodcutting/yews/yewbank1.png', .8)
+        self.click_trigger('triggers/woodcutting/yews/yewbank1.png', .8)
 
         while True:
-            print 'waiting'
+            print ('waiting')
             time.sleep(1)
-            if self.image_match('triggers/banking1.png', .6):
-                self.move_to_trigger('triggers/banking1.png', .6)
-                self.click_trigger('triggers/banking1.png', .6)
+            if self.image_match('triggers/woodcutting/yews/yewbank2.png', .6):
+                self.move_to_trigger('triggers/woodcutting/yews/yewbank2.png', .6)
+                self.click_trigger('triggers/woodcutting/yews/yewbank2.png', .6)
+                time.sleep(8)
                 break
 
         while True:
-            print 'waiting'
-            time.sleep(1)
-            if self.image_match('triggers/logs.png', .7):
-                self.move_to_trigger('triggers/logs.png', .7)
+            print ('waiting')
+            if self.image_match('triggers/woodcutting/yews/bankbooth1.png', .875):
+                self.move_to_trigger('triggers/woodcutting/yews/bankbooth1.png', .875)
+
                 pag.rightClick()
-                self.move_to_trigger('triggers/allwillows.png', .8)
-                self.click_trigger('triggers/allwillows.png', .8)
-                self.log_count += 1
-                print 'Banking Loops: ' +  str(self.log_count)
+                time.sleep(2)
+
+                self.move_to_trigger('triggers/woodcutting/yews/bank.png', .8)
+                pag.click()
+
                 break
 
-        self.move_to_trigger('triggers/spot.png', 0.65)
-        self.click_trigger('triggers/spot.png', 0.65)
-    def drop_log(self):
-        pag.screenshot('triggers/screen.png')
-        screen = cv2.imread('triggers/screen.png')
-        template = cv2.imread('triggers/log.png')
+        time.sleep(1)
+        self.image_match('triggers/woodcutting/yews/yewlogs.png', .7)
+        pag.moveTo(self.coor_x, self.coor_y, self.random_move())
+        pag.rightClick()
+        self.move_to_trigger('triggers/woodcutting/yews/bankyews.png', .8)
+        self.click_trigger('triggers/woodcutting/yews/bankyews.png', .8)
+        self.log_count += 1
+        print ('Banking Loops: ' +  str(self.log_count))
 
-        res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
-        loc = np.where(res >= 1)
-        logs = len(loc[0])
+        while True:
+            print ('waiting')
+            time.sleep(1)
+            if self.image_match('triggers/woodcutting/yews/yewbank1.png', .8):
+                self.move_to_trigger('triggers/woodcutting/yews/yewbank1.png', .8)
+                self.click_trigger('triggers/woodcutting/yews/yewbank1.png', .8)
+                time.sleep(8)
+                break
 
-        if len(loc[0]) > 0:
-            try:
-                pag.moveTo(loc[1][0], loc[0][0], self.random_move())
-                pag.mouseDown(button='right')
 
-                pag.screenshot('triggers/screen.png')
-                screen = cv2.imread('triggers/screen.png')
-                template = cv2.imread('triggers/drop.png')
+        while True:
+            print ('waiting')
+            time.sleep(1)
+            if self.image_match('triggers/woodcutting/yews/yewspot.png', .8):
+                self.move_to_trigger('triggers/woodcutting/yews/yewspot.png', .8)
+                self.click_trigger('triggers/woodcutting/yews/yewspot.png', .8)
+                time.sleep(8)
+                break
 
-                res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
-                loc = np.where(res >= 0.6)
 
-                pag.moveTo(loc[1][0], loc[0][0], self.random_move())
-                pag.click()
-                self.log_count += 1
-                print "Logs Chopped: %s" % logs
-            except:
-                pass
+        pag.keyDown('up')
+        time.sleep(uniform(2, 3))
+        pag.keyUp('up')
+
+
+        def bank_logs(self):
+
+            self.move_to_trigger('triggers/assets/maps.png', .6)
+            self.click_trigger('triggers/assets/maps.png', .6)
+
+
+            self.move_to_trigger('triggers/assets/bank.png', .8)
+            self.click_trigger('triggers/assets/bank.png', .8)
+
+            while True:
+                print ('waiting')
+                time.sleep(1)
+                if self.image_match('triggers/assets/banking1.png', .6):
+                    self.move_to_trigger('triggers/assets/banking1.png', .6)
+                    self.click_trigger('triggers/assets/banking1.png', .6)
+                    break
+
+            while True:
+                print ('waiting')
+                time.sleep(1)
+                if self.image_match('triggers/woodcutting/willow/logs.png', .7):
+                    self.move_to_trigger('triggers/woodcutting/willow/logs.png', .7)
+                    pag.rightClick()
+                    self.move_to_trigger('triggers/woodcutting/willow/allwillows.png', .8)
+                    self.click_trigger('triggers/woodcutting/willow/allwillows.png', .8)
+                    self.log_count += 1
+                    print ('Banking Loops: ' +  str(self.log_count))
+                    break
+
+            self.move_to_trigger('triggers/assets/spot.png', 0.65)
+            self.click_trigger('triggers/assets/spot.png', 0.65)
 
     def chop_loop(self):
             self.start()
             while True:
-                for threshitem in thresh:
-                    for item in willimages:
-                        print 'checking ' + item['link']
-                        if self.check_inv(0.9):
-                            self.bank_logs()
-                        if self.image_match(item['link'], threshitem['thresh-num'] ):
-                            self.move_to_trigger(item['link'], threshitem['thresh-num'])
-                            self.click_and_wait('triggers/mytree.png', 0.575)
-                            print str(item['link'] + ' ' + str(threshitem['thresh-num']) )
+                for item in yewimages:
+                    print ('checking ' + item['link'])
+                    if self.check_inv(0.9):
+                        self.bank_logs_camelot()
+                    time.sleep(2)
+                    if self.image_match(item['link'], item['threshold'] ):
+                        self.move_to_trigger(item['link'], item['threshold'])
+                        self.click_and_wait('triggers/woodcutting/willows/mytree.png', 0.45)
+                        print (str(item['link'] + ' ' + str(item['threshold']) ))
 
                 pag.keyDown('left')
                 time.sleep(uniform(1, 2))
                 pag.keyUp('left')
-                if self.image_match('triggers/mytree.png', 0.575):
-                    self.click_and_wait('triggers/mytree.png', .575)
-
+                if self.image_match('triggers/woodcutting/yews/chopyew.png', 0.45):
+                    self.click_and_wait('triggers/woodcutting/yews/chopyew.png', .45)
 
 bot = ChopBot()
 

@@ -13,13 +13,21 @@ treeimages = [
 
 
 thresh = [
-    {'thresh-num': 0.7},
-    {'thresh-num': 0.6},
+    {'thresh-num': .45},
 ]
 willimages = [
     {'link': 'triggers/willows/willowleaves.png'},
     {'link': 'triggers/willows/willowleaves2.png'},
     {'link': 'triggers/willows/willowleaves3.png'},
+    {'link': 'triggers/willows/willowleaves4.png'},
+]
+
+yewimages = [
+    {'link': 'triggers/woodcutting/yews/topyew.png', 'threshold': 0.99},
+    {'link': 'triggers/woodcutting/yews/topyew1.png', 'threshold': .25},
+    {'link': 'triggers/woodcutting/yews/topyew3.png', 'threshold': .25},
+    {'link': 'triggers/woodcutting/yews/topyew4.png', 'threshold': .25},
+    {'link': 'triggers/woodcutting/yews/yewleaves3.png', 'threshold': .25},
 ]
 
 goblin = [
