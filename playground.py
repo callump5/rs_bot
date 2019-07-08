@@ -15,6 +15,7 @@ class ChopBot(object):
         self.coor_y = 0
         self.coor_x = 0
         self.log_count = 0
+        self.w = 0
 
     def img_match(self, item, thesh):
         # Image of screen
@@ -50,7 +51,7 @@ class ChopBot(object):
         return uniform(min, max)
 
 
-    def random_move(self, min=.7, max=1.5):
+    def random_move(self, min=.25, max=.5):
         """Waits a random number of seconds between two numbers (0.25 and 0.50 default) to mimic human reaction time"""
         return uniform(min, max)
 
@@ -62,9 +63,9 @@ class ChopBot(object):
         res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= 0.6)
         if len(loc[0]) > 0:
-            pag.moveTo(loc[1][0] + randint(7,10), loc[0][0] + randint(7,10))
+            pag.moveTo(loc[1][0] + randint(7,10), loc[0][0] + randint(7,10),  self.random_move())
             pag.click()
-            time.sleep(7 + randint(5,7))
+            time.sleep(12 + randint(5,7))
 
 
 
@@ -74,11 +75,11 @@ class ChopBot(object):
             template = cv2.imread('triggers/assets/booth.png')
 
             res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
-            loc = np.where(res >= 0.5)
+            loc = np.where(res >= 0.4)
             if len(loc[0]) > 0:
-                pag.moveTo(loc[1][0] + randint(7, 10), loc[0][0] + randint(7, 10))
+                pag.moveTo(loc[1][0] + randint(7, 10), loc[0][0] + randint(7, 10),  self.random_move())
                 pag.click()
-                time.sleep(2)
+                time.sleep(3)
 
 
 
@@ -89,7 +90,7 @@ class ChopBot(object):
             res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
             loc = np.where(res >= 0.8)
             if len(loc[0]) > 0:
-                pag.moveTo(loc[1][0] + randint(7, 10), loc[0][0] + randint(7, 10))
+                pag.moveTo(loc[1][0] + randint(7, 10), loc[0][0] + randint(7, 10),  self.random_move())
                 pag.click()
                 time.sleep(2)
 
@@ -101,9 +102,9 @@ class ChopBot(object):
             res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
             loc = np.where(res >= 0.6)
             if len(loc[0]) > 0:
-                pag.moveTo(loc[1][0] - randint(7, 30), loc[0][0] + 40)
+                pag.moveTo(loc[1][0] - randint(7, 30), loc[0][0] + 40,  self.random_move())
                 pag.click()
-                time.sleep(5)
+                time.sleep(10)
 
 
 
@@ -117,11 +118,8 @@ class ChopBot(object):
         loc = np.where(res >= 0.7)
 
         if len(loc[0]) > 25:
-            print ("Bag is full!!")
             self.bank_logs()
             time.sleep(1)
-
-
 
     def wait_to_chop(self):
 
@@ -133,9 +131,17 @@ class ChopBot(object):
 
         res = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
         loc = np.where(res >= 0.5)
+        print self.w
         if len(loc[0]) > 0:
-            time.sleep(1)
-            self.wait_to_chop()
+            if self.w >= randint(9, 15):
+                pag.click()
+                self.w = 0
+            else:
+                time.sleep(1)
+                self.w += 1
+                self.wait_to_chop()
+        else:
+            self.w = 0
 
     def chop(self):
         pag.screenshot('triggers/screen.png')
@@ -158,11 +164,9 @@ class ChopBot(object):
         numWhitePoints = len( coors )
         index = (numWhitePoints/100) * 90
 
-        print coors[0]
-        print "Found {0} points".format( numWhitePoints )
 
         rand = randint(1, 5) - randint(1, 5)
-        pag.moveTo(coors[index][1] + rand, coors[index][0] + rand, 0.2)
+        pag.moveTo(coors[index][1] + rand, coors[index][0] + rand,  self.random_move())
         pag.click()
 
 
